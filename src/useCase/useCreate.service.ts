@@ -1,5 +1,6 @@
 import { prisma } from "../lib/prisma";
 import bcrypt from 'bcrypt';
+import { PrismaUserRepository } from "../repositories/prisma.user.repository";
 
 interface CreateUserParams {
     name: string
@@ -19,12 +20,12 @@ async function createUser({ name, email, password }: CreateUserParams) {
 
     const password_hash = await bcrypt.hash(password, 8);
 
-    await prisma.user.create({
-        data: {
-            name,
-            email,
-            password_hash
-        },
+    const primaUserRepository = await new PrismaUserRepository();
+
+    await primaUserRepository.create({
+        name,
+        email,
+        password_hash
     });
 };
 
